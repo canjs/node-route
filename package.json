@@ -30,6 +30,7 @@
     "jquery": "^2.1.4",
     "steal": "^0.10.5",
     "steal-qunit": "0.0.4",
-    "steal-tools": "^0.10.7"
+    "steal-tools": "^0.10.7",
+    "testee": "^0.2.0"
   }
 }
