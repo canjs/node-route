@@ -1,0 +1,32 @@
+{
+  "name": "node-route",
+  "version": "0.1.0",
+  "description": "Routes for Nodes",
+  "main": "dom-id.js",
+  "scripts": {
+    "test": "testee test/index.html --browsers firefox --reporter Spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/canjs/node-route.git"
+  },
+  "keywords": [
+    "DOM"
+  ],
+  "author": "Bitovi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/canjs/node-route/issues"
+  },
+  "homepage": "https://github.com/canjs/node-route#readme",
+  "system": {
+    "directories": {
+      "lib": "src"
+    }
+  },
+  "devDependencies": {
+    "jquery": "^2.1.4",
+    "steal": "^0.10.5",
+    "steal-qunit": "0.0.4"
+  }
+}
