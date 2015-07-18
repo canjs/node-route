@@ -4,7 +4,9 @@
   "description": "Routes for Nodes",
   "main": "dom-id.js",
   "scripts": {
-    "test": "testee test/index.html --browsers firefox --reporter Spec"
+    "build": "node build.js",
+    "test": "testee test/index.html --browsers firefox --reporter Spec",
+    "prepublish": "node build.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +29,7 @@
   "devDependencies": {
     "jquery": "^2.1.4",
     "steal": "^0.10.5",
-    "steal-qunit": "0.0.4"
+    "steal-qunit": "0.0.4",
+    "steal-tools": "^0.10.7"
   }
 }
