@@ -230,6 +230,24 @@ exports.purgeID = function(id){
 	}
 };
 
+/**
+ * Purge all caching for a node
+ */
+exports.purgeNode = function(node){
+	var routeInfo = getCachedInfo(node);
+	var parentRouteInfo = getCachedInfo(node.parentNode);
+	if(parentRouteInfo) {
+		var parentBranch = parentRouteInfo.branch;
+		var index = getIndex(routeInfo.id);
+
+		// Remove this branch
+		parentBranch.splice(index, 1);
+		routeInfo.branch.length = 0;
+
+		nodeCache = {};
+	}
+};
+
 exports.purgeSiblings = function(node){
 	var routeInfo = getCachedInfo(node);
 	var parentRouteInfo = getCachedInfo(node.parentNode);
