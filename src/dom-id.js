@@ -235,6 +235,7 @@ exports.purgeID = function(id){
  */
 exports.purgeNode = function(node){
 	var routeInfo = getCachedInfo(node);
+	if(!routeInfo) return;
 	var parentRouteInfo = getCachedInfo(node.parentNode);
 	if(parentRouteInfo) {
 		var parentBranch = parentRouteInfo.branch;
@@ -250,6 +251,7 @@ exports.purgeNode = function(node){
 
 exports.purgeSiblings = function(node){
 	var routeInfo = getCachedInfo(node);
+	if(!routeInfo) return;
 	var parentRouteInfo = getCachedInfo(node.parentNode);
 	if(parentRouteInfo) {
 		var parentBranch = parentRouteInfo.branch;
