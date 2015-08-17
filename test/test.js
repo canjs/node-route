@@ -4,7 +4,7 @@ var $ = require("jquery");
 
 var SPAN_ID = "0.1.0.0.0.1.0";
 
-QUnit.module("dom-id", {
+QUnit.module("node-route", {
 	setup: function(){
 		nodeRoute.purgeID(SPAN_ID);
 		$("#qunit-test-area").html(
