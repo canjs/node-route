@@ -4,7 +4,7 @@ var $ = require("jquery");
 
 var SPAN_ID = "0.1.0.0.0.1.0";
 
-QUnit.module("dom-id", {
+QUnit.module("node-route", {
 	setup: function(){
 		nodeRoute.purgeID(SPAN_ID);
 		$("#qunit-test-area").html(
@@ -36,4 +36,20 @@ QUnit.test("purges nodes correctly", function(){
 	node.parentNode.removeChild(node);
 
 	QUnit.equal(nodeRoute.nodeCache[id], undefined, "Node was purged");
+});
+
+QUnit.test("purge sibilings works even with getNode", function(){
+	var firstLi = $("#qunit-test-area li")[0];
+	$(firstLi).attr("first", true);
+	// This should
+	nodeRoute.getID(firstLi);
+
+	var newLi = $("<li>")[0];
+	firstLi.parentNode.insertBefore(newLi, firstLi);
+
+	nodeRoute.purgeSiblings(newLi);
+
+	var parentBranch = nodeRoute.getCachedInfo(firstLi.parentNode).branch;
+
+	QUnit.equal(parentBranch[0].element, newLi, "Branch replaced with the new li");
 });

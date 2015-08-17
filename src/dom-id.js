@@ -93,6 +93,8 @@ function getBranch(index, element, parentBranch) {
 	if(!branch) {
 		branch = parentBranch[index] = [];
 		branch.element = element;
+	} else if(branch.element !== element) {
+		branch.element = element;
 	}
 	return branch;
 }
@@ -245,7 +247,7 @@ exports.purgeNode = function(node){
 		parentBranch.splice(index, 1);
 		routeInfo.branch.length = 0;
 
-		nodeCache = {};
+		nodeCache = exports.nodeCache = {};
 	} else {
 		exports.purgeID(routeInfo.id);
 	}
@@ -253,14 +255,17 @@ exports.purgeNode = function(node){
 
 exports.purgeSiblings = function(node){
 	var routeInfo = getCachedInfo(node);
-	if(!routeInfo) return;
+	if(!routeInfo) {
+		exports.getID(node);
+		routeInfo = getCachedInfo(node);
+	}
 	var parentRouteInfo = getCachedInfo(node.parentNode);
 	if(parentRouteInfo && parentRouteInfo.branch) {
 		var parentBranch = parentRouteInfo.branch;
 		var index = getIndex(routeInfo.id);
 		var staleBranch = false;
 		parentBranch.forEach(function(branch, i){
-			if(i > index) {
+			if(i > index || (i === index && branch.element !== node)) {
 				// This branch is stale, remove it.
 				staleBranch = true;
 				return false;
@@ -271,4 +276,9 @@ exports.purgeSiblings = function(node){
 			parentBranch[index] = routeInfo.branch;
 		}
 	}
+};
+
+exports.purgeCache = function(){
+	nodeCache = exports.nodeCache = {};
+	nodeTree = exports.nodeTree = [];
 };
