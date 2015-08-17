@@ -237,7 +237,7 @@ exports.purgeNode = function(node){
 	var routeInfo = getCachedInfo(node);
 	if(!routeInfo) return;
 	var parentRouteInfo = getCachedInfo(node.parentNode);
-	if(parentRouteInfo) {
+	if(parentRouteInfo && parentRouteInfo.branch) {
 		var parentBranch = parentRouteInfo.branch;
 		var index = getIndex(routeInfo.id);
 
@@ -246,6 +246,8 @@ exports.purgeNode = function(node){
 		routeInfo.branch.length = 0;
 
 		nodeCache = {};
+	} else {
+		exports.purgeID(routeInfo.id);
 	}
 };
 
@@ -253,7 +255,7 @@ exports.purgeSiblings = function(node){
 	var routeInfo = getCachedInfo(node);
 	if(!routeInfo) return;
 	var parentRouteInfo = getCachedInfo(node.parentNode);
-	if(parentRouteInfo) {
+	if(parentRouteInfo && parentRouteInfo.branch) {
 		var parentBranch = parentRouteInfo.branch;
 		var index = getIndex(routeInfo.id);
 		var staleBranch = false;

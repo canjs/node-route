@@ -26,3 +26,14 @@ QUnit.test("finds the element at a route", function(){
 
 	equal(span, node, "Got the correct element");
 });
+
+QUnit.test("purges nodes correctly", function(){
+	var span = $("#qunit-test-area span")[0];
+	var node = nodeRoute.getNode(SPAN_ID);
+	var id = nodeRoute.getCachedID(node);
+
+	nodeRoute.purgeNode(node);
+	node.parentNode.removeChild(node);
+
+	QUnit.equal(nodeRoute.nodeCache[id], undefined, "Node was purged");
+});
