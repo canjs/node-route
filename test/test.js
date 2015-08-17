@@ -37,3 +37,19 @@ QUnit.test("purges nodes correctly", function(){
 
 	QUnit.equal(nodeRoute.nodeCache[id], undefined, "Node was purged");
 });
+
+QUnit.test("purge sibilings works even with getNode", function(){
+	var firstLi = $("#qunit-test-area li")[0];
+	$(firstLi).attr("first", true);
+	// This should
+	nodeRoute.getID(firstLi);
+
+	var newLi = $("<li>")[0];
+	firstLi.parentNode.insertBefore(newLi, firstLi);
+
+	nodeRoute.purgeSiblings(newLi);
+
+	var parentBranch = nodeRoute.getCachedInfo(firstLi.parentNode).branch;
+
+	QUnit.equal(parentBranch[0].element, newLi, "Branch replaced with the new li");
+});
