@@ -247,7 +247,7 @@ exports.purgeNode = function(node){
 		parentBranch.splice(index, 1);
 		routeInfo.branch.length = 0;
 
-		nodeCache = {};
+		nodeCache = exports.nodeCache = {};
 	} else {
 		exports.purgeID(routeInfo.id);
 	}
@@ -276,4 +276,9 @@ exports.purgeSiblings = function(node){
 			parentBranch[index] = routeInfo.branch;
 		}
 	}
+};
+
+exports.purgeCache = function(){
+	nodeCache = exports.nodeCache = {};
+	nodeTree = exports.nodeTree = [];
 };
