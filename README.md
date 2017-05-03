@@ -1,5 +1,7 @@
 # node-route
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/canjs/node-route.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/canjs/node-route.svg?branch=master)](https://travis-ci.org/canjs/node-route)
 [![npm version](https://badge.fury.io/js/node-route.svg)](http://badge.fury.io/js/node-route)
 
