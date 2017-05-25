@@ -1,6 +1,6 @@
 {
   "name": "node-route",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Routes for Nodes",
   "main": "src/dom-id.js",
   "scripts": {
