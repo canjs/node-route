@@ -46,6 +46,16 @@ var rootNode = exports.rootNode = function(root){
 	return root.documentElement || root;
 };
 
+var createRouteInfo = function(id, branch, value){
+	var routeInfo = Object.create(null);
+	routeInfo.id = id;
+	routeInfo.branch = branch;
+	if(value !== undefined) {
+		routeInfo.value = value;
+	}
+	return routeInfo;
+};
+
 var cache = function(node, routeInfo){
 	node.__routeInfo = routeInfo;
 	nodeCache[routeInfo.id] = node;
@@ -73,6 +83,9 @@ var getID = exports.getID = function(node){
 	}
 	return id;
 };
+
+// Export getRoute for advanced use.
+exports.getRoute = getRoute;
 
 var getCachedInfo = exports.getCachedInfo = function(node){
 	return node.__routeInfo;
@@ -117,8 +130,9 @@ exports.indexOfParent = function indexOfParent(parent, node){
  * Generates the route for a particular node, caching the intermediate nodes
  * along the way.
  */
-function getRoute(node) {
-	var id = "";
+function getRoute(node, options) {
+	var id = "", nodeType
+	var collapseTextNodes = options && options.collapseTextNodes;
 
 	var parent = node.parentNode;
 	var index = -1;
@@ -128,11 +142,24 @@ function getRoute(node) {
 	}
 
 	var child = parent.firstChild;
+	var prevNodeType, value;
 	while(child) {
-		index++;
+		if(collapseTextNodes && child.nodeType === 3) {
+			if(prevNodeType === 3) {
+				value += child.nodeValue;
+			} else {
+				value = child.nodeValue;
+				index++;
+			}
+		} else {
+			value = undefined;
+			index++;
+		}
+
 		if(child === node) {
 			break;
 		}
+		prevNodeType = child.nodeType;
 		child = child.nextSibling;
 	}
 
@@ -145,10 +172,9 @@ function getRoute(node) {
 
 	id = (parentId ? parentId + SEPARATOR : "") + index;
 
-	var routeInfo = {
-		id: id,
-		branch: getBranch(index, node, parentInfo.branch)
-	};
+	var routeInfo = createRouteInfo(id, getBranch(index, node, parentInfo.branch),
+		collapseTextNodes ? value : undefined);
+
 	cache(node, routeInfo);
 
 	return routeInfo;
