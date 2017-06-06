@@ -127,12 +127,6 @@ exports.indexOfParent = function indexOfParent(parent, node){
 	return index;
 };
 
-var whitespaceExp = /^\s*$/;
-function isEmptyTextNode(node) {
-	var value = node.nodeValue;
-	return whitespaceExp.test(value);
-}
-
 /**
  * Generates the route for a particular node, caching the intermediate nodes
  * along the way.
@@ -149,14 +143,15 @@ function getRoute(node, options) {
 	}
 
 	var child = parent.firstChild;
-	var nextNodeType, prevNodeType, value;
+	var prevNodeType, siblingTag, value;
 	while(child) {
 		if(collapseTextNodes && child.nodeType === 3) {
-			nextNodeType = child.nextSibling && child.nextSibling.nodeType;
+			siblingTag = child.nextSibling && child.nextSibling.nodeName;
 			if(prevNodeType === 3) {
 				value += child.nodeValue;
 			}
-			else if(nextNodeType === 3 || !isEmptyTextNode(child)) {
+			// TextNodes before the <head> are ignored.
+			else if(siblingTag !== "HEAD") {
 				value = child.nodeValue;
 				index++;
 			}
