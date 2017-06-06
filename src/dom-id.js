@@ -72,13 +72,14 @@ var cache = function(node, routeInfo){
  * walking up the document
  *
  * @param {Node} node
+ * @param {Object} options
  * @return {String} id of the node
  */
-var getID = exports.getID = function(node){
+var getID = exports.getID = function(node, options){
 	var id = getCachedID(node);
 	if(!id) {
 		// Get the route to the node.
-		var routeInfo = getRoute(node);
+		var routeInfo = getRoute(node, options);
 		id = routeInfo.id;
 	}
 	return id;
@@ -126,6 +127,12 @@ exports.indexOfParent = function indexOfParent(parent, node){
 	return index;
 };
 
+var whitespaceExp = /^\s*$/;
+function isEmptyTextNode(node) {
+	var value = node.nodeValue;
+	return whitespaceExp.test(value);
+}
+
 /**
  * Generates the route for a particular node, caching the intermediate nodes
  * along the way.
@@ -142,12 +149,14 @@ function getRoute(node, options) {
 	}
 
 	var child = parent.firstChild;
-	var prevNodeType, value;
+	var nextNodeType, prevNodeType, value;
 	while(child) {
 		if(collapseTextNodes && child.nodeType === 3) {
+			nextNodeType = child.nextSibling && child.nextSibling.nodeType;
 			if(prevNodeType === 3) {
 				value += child.nodeValue;
-			} else {
+			}
+			else if(nextNodeType === 3 || !isEmptyTextNode(child)) {
 				value = child.nodeValue;
 				index++;
 			}
@@ -166,7 +175,7 @@ function getRoute(node, options) {
 	// ARG!
 
 	var parentInfo = parent.nodeType === 9 ? {id:""} :
-		getCachedInfo(parent) || getRoute(parent);
+		getCachedInfo(parent) || getRoute(parent, options);
 
 	var parentId = parentInfo.id;
 
