@@ -91,3 +91,21 @@ QUnit.test("{collapseTextNodes} works when there are elements mixins with text n
 	QUnit.equal(info.id, "0.2", "Found the right one");
 	QUnit.equal(info.value, "ThreeFour", "Returned the value as well");
 });
+
+QUnit.test("{collapseTextNodes} ignores whitespace TextNodes", function(){
+	var cel = document.createElement.bind(document);
+	var ctn = document.createTextNode.bind(document);
+	var container = cel("div");
+
+	container.appendChild(cel("p"));
+	container.appendChild(ctn(""));
+	container.appendChild(cel("span"));
+	container.appendChild(ctn("\n"));
+
+	var last = cel("p");
+	container.appendChild(last);
+
+	var id = nodeRoute.getID(last, { collapseTextNodes: true });
+
+	QUnit.equal(id, "0.2", "correct id");
+});
