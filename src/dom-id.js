@@ -5,8 +5,6 @@
  *
  */
 
-console.log("HERE WE BE!!!!!");
-
 var slice = [].slice;
 
 // An object for caching nodes
