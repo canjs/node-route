@@ -46,10 +46,11 @@ var rootNode = exports.rootNode = function(root){
 	return root.documentElement || root;
 };
 
-var createRouteInfo = function(id, branch, value){
+var createRouteInfo = function(id, branch, value, collapsed){
 	var routeInfo = Object.create(null);
 	routeInfo.id = id;
 	routeInfo.branch = branch;
+	routeInfo.collapsed = collapsed;
 	if(value !== undefined) {
 		routeInfo.value = value;
 	}
@@ -76,7 +77,15 @@ var cache = function(node, routeInfo){
  * @return {String} id of the node
  */
 var getID = exports.getID = function(node, options){
-	var id = getCachedID(node);
+	var id;
+	var info = getCachedInfo(node);
+	if(info) {
+		id = info.id;
+		var invalid = info.collapsed !== (options && options.collapseTextNodes);
+		if(invalid) {
+			id = undefined;
+		}
+	}
 	if(!id) {
 		// Get the route to the node.
 		var routeInfo = getRoute(node, options);
@@ -168,16 +177,25 @@ function getRoute(node, options) {
 	}
 
 	// ARG!
+	
+	var parentInfo;
 
-	var parentInfo = parent.nodeType === 9 ? {id:""} :
-		getCachedInfo(parent) || getRoute(parent, options);
+	if(parent.nodeType === 9) {
+		parentInfo = {id: ""};
+	} else {
+		parentInfo = getCachedInfo(parent);
+		if(!parentInfo || collapseTextNodes) {
+			parentInfo = getRoute(parent, options);
+		}
+	}
 
 	var parentId = parentInfo.id;
 
 	id = (parentId ? parentId + SEPARATOR : "") + index;
 
-	var routeInfo = createRouteInfo(id, getBranch(index, node, parentInfo.branch),
-		collapseTextNodes ? value : undefined);
+	var routeInfo = createRouteInfo(id,
+		getBranch(index, node, parentInfo.branch),
+		collapseTextNodes ? value : undefined, collapseTextNodes);
 
 	cache(node, routeInfo);
 
