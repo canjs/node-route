@@ -122,15 +122,19 @@ function getBranch(index, element, parentBranch) {
 	return branch;
 }
 
-exports.indexOfParent = function indexOfParent(parent, node){
+exports.indexOfParent = function indexOfParent(parent, node, options){
 	var index = -1;
+	var collapseTextNodes = options && options.collapseTextNodes;
 
-	var child = parent.firstChild;
+	var child = parent.firstChild, last, skip;
 	while(child) {
-		index++;
+		skip = collapseTextNodes && child.nodeType === 3 && last === 3;
+		if(!skip)
+			index++;
 		if(child === node) {
 			break;
 		}
+		last = child.nodeType;
 		child = child.nextSibling;
 	}
 	return index;

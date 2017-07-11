@@ -113,3 +113,21 @@ QUnit.test("{collapseTextNodes} ignores whitespace TextNodes", function(){
 
 	QUnit.equal(id, "0.1.4", "correct id");
 });
+
+QUnit.module("nodeRoute.indexOfParent");
+
+QUnit.test("{collapseTextNodes} option skips texts nodes", function(){
+	var cel = document.createElement.bind(document);
+	var ctn = document.createTextNode.bind(document);
+
+	var container = cel("div");
+	container.appendChild(ctn("One"));
+	container.appendChild(cel("section"));
+	container.appendChild(ctn(""));
+	var three = ctn("Three");
+	container.appendChild(three);
+
+	QUnit.equal(nodeRoute.indexOfParent(container, three), 3, "Is 3 when the collapseTextNodes option is not provided");
+	var opts = { collapseTextNodes: true };
+	QUnit.equal(nodeRoute.indexOfParent(container, three, opts), 2, "Is 2 when the collapseTextNodes option is provided");
+});
