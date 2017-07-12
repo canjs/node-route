@@ -263,7 +263,7 @@ exports.getNode = function(id, root){
 
 	// Find the node with traversal
 	node = findNode(id, root);
-	if(!root) {
+	if(!root && node != null) {
 		cache(node, {id:id});
 	}
 
